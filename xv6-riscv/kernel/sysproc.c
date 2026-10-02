@@ -135,3 +135,12 @@ sys_getprocsize(void)
 
   return getprocsize(pid);
 }
+uint64
+sys_familyheadcount(void)
+{
+  int pid;
+
+  argint(0, &pid);
+
+  return familyheadcount(pid);
+}
