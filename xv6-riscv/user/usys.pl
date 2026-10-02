@@ -46,3 +46,4 @@ entry("sync");
 entry("getuptime");
 entry("activecount");
 entry("getprocsize");
+entry("familyheadcount");
