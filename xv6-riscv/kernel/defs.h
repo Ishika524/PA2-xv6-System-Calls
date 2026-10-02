@@ -105,6 +105,7 @@ int             either_copyin(void *dst, int user_src, uint64 src, uint64 len);
 void            procdump(void);
 int             activecount(void);
 int             getprocsize(int);
+int             familyheadcount(int);
 
 // swtch.S
 void            swtch(struct context*, struct context*);
