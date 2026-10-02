@@ -135,6 +135,7 @@ static uint64 (*syscalls[])(void) = {
   [SYS_sync]    = sys_sync,
   [SYS_getuptime] = sys_getuptime,
   [SYS_activecount] = sys_activecount,
+  [SYS_getprocsize] = sys_getprocsize,
   // clang-format on
 };
 
