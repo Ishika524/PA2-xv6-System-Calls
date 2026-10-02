@@ -28,6 +28,7 @@ int getuptime(void);
 int sync(void);
 int activecount(void);
 int getprocsize(int);
+int familyheadcount(int);
 
 // ulib.c
 int stat(const char *, struct stat *);
