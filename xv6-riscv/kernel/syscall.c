@@ -105,6 +105,7 @@ extern uint64 sys_mkdir(void);
 extern uint64 sys_close(void);
 extern uint64 sys_sync(void);
 extern uint64 sys_activecount(void);
+extern uint64 sys_getprocsize(void);
 
 // An array mapping syscall numbers from syscall.h
 // to the function that handles the system call.
