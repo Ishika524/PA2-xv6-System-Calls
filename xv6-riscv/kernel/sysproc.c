@@ -139,8 +139,21 @@ uint64
 sys_familyheadcount(void)
 {
   int pid;
+  struct proc *parent;
 
   argint(0, &pid);
 
-  return familyheadcount(pid);
+  for(parent = proc; parent < &proc[NPROC]; parent++) {
+    acquire(&parent->lock);
+
+    if(parent->pid == pid && parent->state != UNUSED) {
+      release(&parent->lock);
+      return familyheadcount(parent);
+    }
+
+    release(&parent->lock);
+  }
+
+  return -1;
 }
+
