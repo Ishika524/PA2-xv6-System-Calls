@@ -24,3 +24,4 @@
 #define SYS_getuptime  23
 #define SYS_activecount 24
 #define SYS_getprocsize 25
+#define SYS_familyheadcount 26
