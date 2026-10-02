@@ -736,22 +736,34 @@ getprocsize(int pid)
   return -1;
 }
 int
-familyheadcount(struct proc *parent)
+familyheadcount(int pid)
 {
+  struct proc *parent;
   struct proc *p;
   int count = 0;
 
-  for(p = proc; p < &proc[NPROC]; p++) {
-    acquire(&p->lock);
+  for(parent = proc; parent < &proc[NPROC]; parent++) {
+    acquire(&parent->lock);
 
-    if(p->parent == parent &&
-       p->state != UNUSED &&
-       p->state != ZOMBIE) {
-      count++;
+    if(parent->pid == pid && parent->state != UNUSED) {
+      for(p = proc; p < &proc[NPROC]; p++) {
+        acquire(&p->lock);
+
+        if(p->parent == parent &&
+           p->state != UNUSED &&
+           p->state != ZOMBIE) {
+          count++;
+        }
+
+        release(&p->lock);
+      }
+
+      release(&parent->lock);
+      return count;
     }
 
-    release(&p->lock);
+    release(&parent->lock);
   }
 
-  return count;
+  return -1;
 }
