@@ -27,6 +27,7 @@ int uptime(void);
 int getuptime(void);
 int sync(void);
 int activecount(void);
+int getprocsize(int);
 
 // ulib.c
 int stat(const char *, struct stat *);
