@@ -716,3 +716,22 @@ activecount(void)
   }
   return count;
 }
+int
+getprocsize(int pid)
+{
+  struct proc *p;
+
+  for(p = proc; p < &proc[NPROC]; p++) {
+    acquire(&p->lock);
+
+    if(p->pid == pid && p->state != UNUSED) {
+      uint64 size = p->sz;
+      release(&p->lock);
+      return size;
+    }
+
+    release(&p->lock);
+  }
+
+  return -1;
+}
