@@ -45,3 +45,4 @@ entry("uptime");
 entry("sync");
 entry("getuptime");
 entry("activecount");
+entry("getprocsize");
