@@ -29,7 +29,7 @@ int sync(void);
 int activecount(void);
 int getprocsize(int);
 int familyheadcount(int);
-
+int lineage(int);
 // ulib.c
 int stat(const char *, struct stat *);
 char *strcpy(char *, const char *);

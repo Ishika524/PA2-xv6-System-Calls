@@ -47,3 +47,4 @@ entry("getuptime");
 entry("activecount");
 entry("getprocsize");
 entry("familyheadcount");
+entry("lineage");

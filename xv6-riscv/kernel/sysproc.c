@@ -144,3 +144,10 @@ sys_familyheadcount(void)
 
   return familyheadcount(pid);
 }
+uint64
+sys_lineage(void)
+{
+  int pid;
+  argint(0, &pid);
+  return lineage(pid);
+}

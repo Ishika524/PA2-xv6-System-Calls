@@ -25,3 +25,4 @@
 #define SYS_activecount 24
 #define SYS_getprocsize 25
 #define SYS_familyheadcount 26
+#define SYS_lineage 27

@@ -738,32 +738,88 @@ getprocsize(int pid)
 int
 familyheadcount(int pid)
 {
-  struct proc *parent;
+  struct proc *parent = 0;
   struct proc *p;
   int count = 0;
 
-  for(parent = proc; parent < &proc[NPROC]; parent++) {
-    acquire(&parent->lock);
-
-    if(parent->pid == pid && parent->state != UNUSED) {
-      for(p = proc; p < &proc[NPROC]; p++) {
-        acquire(&p->lock);
-
-        if(p->parent == parent &&
-           p->state != UNUSED &&
-           p->state != ZOMBIE) {
-          count++;
-        }
-
-        release(&p->lock);
-      }
-
-      release(&parent->lock);
-      return count;
+  // 1. Locate the parent process and make sure it is active
+  for(p = proc; p < &proc[NPROC]; p++) {
+    acquire(&p->lock);
+    if(p->pid == pid && p->state != UNUSED) {
+      parent = p;
+      release(&p->lock);
+      break;
     }
-
-    release(&parent->lock);
+    release(&p->lock);
   }
 
-  return -1;
+  // If the process does not exist or is UNUSED, return -1
+  if(parent == 0)
+    return -1;
+
+  // 2. Count active non-zombie children (holding at most 1 lock at a time)
+  for(p = proc; p < &proc[NPROC]; p++) {
+    acquire(&p->lock);
+    if(p->parent == parent && p->state != UNUSED && p->state != ZOMBIE) {
+      count++;
+    }
+    release(&p->lock);
+  }
+
+  return count;
+}
+int
+lineage(int pid)
+{
+  struct proc *p;
+  struct proc *curr = 0;
+
+  // 1. Locate the starting process
+  for(p = proc; p < &proc[NPROC]; p++) {
+    acquire(&p->lock);
+    if(p->state != UNUSED && p->pid == pid) {
+      curr = p;
+      break;
+    }
+    release(&p->lock);
+  }
+
+  if(curr == 0)
+    return -1;
+
+  int count = 0;
+
+  // 2. Walk ancestry chain up to init (PID 1)
+  while(curr) {
+    if(curr->state == UNUSED) {
+      release(&curr->lock);
+      break;
+    }
+
+    char name[16];
+    safestrcpy(name, curr->name, sizeof(name));
+    int cur_pid = curr->pid;
+    struct proc *parent = curr->parent;
+
+    printk("PID %d: %s\n", cur_pid, name);
+    count++;
+
+    // Reached init (PID 1) or no parent
+    if(cur_pid == 1 || parent == 0) {
+      release(&curr->lock);
+      break;
+    }
+
+    // Release current lock before acquiring parent lock (hold max 1 lock)
+    release(&curr->lock);
+
+    acquire(&parent->lock);
+    if(parent->state == UNUSED) {
+      release(&parent->lock);
+      break;
+    }
+    curr = parent;
+  }
+
+  return count;
 }
