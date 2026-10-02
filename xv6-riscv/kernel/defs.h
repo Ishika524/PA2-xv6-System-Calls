@@ -107,6 +107,7 @@ int             activecount(void);
 int             getprocsize(int);
 int             familyheadcount(int);
 int             lineage(int);
+int             getprocs(uint64, int);
 // swtch.S
 void            swtch(struct context*, struct context*);
 

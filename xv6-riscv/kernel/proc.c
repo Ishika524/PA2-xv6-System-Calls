@@ -823,3 +823,33 @@ lineage(int pid)
 
   return count;
 }
+int
+getprocs(uint64 uaddr, int max)
+{
+  struct proc *p;
+  struct proc_info info;
+  int count = 0;
+
+  for(p = proc; p < &proc[NPROC]; p++) {
+    if(count >= max)
+      break;
+
+    acquire(&p->lock);
+    if(p->state != UNUSED) {
+      info.pid = p->pid;
+      info.ppid = p->parent ? p->parent->pid : 0;
+      info.sz = p->sz;
+      safestrcpy(info.name, p->name, sizeof(info.name));
+      release(&p->lock);
+
+      if(either_copyout(1, uaddr + count * sizeof(info), (char*)&info, sizeof(info)) < 0) {
+        return -1;
+      }
+      count++;
+    } else {
+      release(&p->lock);
+    }
+  }
+
+  return count;
+}

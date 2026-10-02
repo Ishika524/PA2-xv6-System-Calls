@@ -102,3 +102,9 @@ struct proc {
   struct inode *cwd;           // Current directory
   char name[16];               // Process name (debugging)
 };
+struct proc_info {
+  int pid;
+  int ppid;
+  uint64 sz;
+  char name[16];
+};

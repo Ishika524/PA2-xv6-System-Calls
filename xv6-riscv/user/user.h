@@ -1,7 +1,12 @@
 #define SBRK_ERROR ((char *)-1)
 
 struct stat;
-
+struct proc_info {
+  int pid;
+  int ppid;
+  uint64 sz;
+  char name[16];
+};
 // system calls
 int fork(void);
 int exit(int) __attribute__((noreturn));
@@ -30,6 +35,7 @@ int activecount(void);
 int getprocsize(int);
 int familyheadcount(int);
 int lineage(int);
+int getprocs(struct proc_info *, int);
 // ulib.c
 int stat(const char *, struct stat *);
 char *strcpy(char *, const char *);

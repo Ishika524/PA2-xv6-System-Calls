@@ -108,6 +108,7 @@ extern uint64 sys_activecount(void);
 extern uint64 sys_getprocsize(void);
 extern uint64 sys_familyheadcount(void);
 extern uint64 sys_lineage(void);
+extern uint64 sys_getprocs(void);
 // An array mapping syscall numbers from syscall.h
 // to the function that handles the system call.
 static uint64 (*syscalls[])(void) = {
@@ -139,6 +140,7 @@ static uint64 (*syscalls[])(void) = {
   [SYS_getprocsize] = sys_getprocsize,
   [SYS_familyheadcount] = sys_familyheadcount,
   [SYS_lineage] = sys_lineage,
+  [SYS_getprocs]        = sys_getprocs,
   // clang-format on
 };
 

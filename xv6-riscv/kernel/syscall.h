@@ -26,3 +26,4 @@
 #define SYS_getprocsize 25
 #define SYS_familyheadcount 26
 #define SYS_lineage 27
+#define SYS_getprocs 28
